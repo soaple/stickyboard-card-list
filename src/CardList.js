@@ -14,36 +14,59 @@ class CardList extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            list: [
-                'test1',
-                'test2',
-                'test3',
-                'test4',
-                'test5',
-                'test6',
-                'test7',
-                'test8',
-                'test9',
-                'test10',
-            ],
-        };
+        this.state = {};
     }
 
+    /**
+     *    {
+        title: '호호',
+        description: '아무 설명이나 넣어볼게요',
+        name: '김태은',
+        date: '2020-09-13',
+        comment: 5,
+        like: 8,
+        view: 10,
+        share: 3,
+        badgeColor: 'purple',
+    },
+     */
+
     render() {
+        const { data, title } = this.props;
+        console.log(data);
         return (
             <Wrapper>
-                {this.state.list.map((item) => {
+                <div style={{ borderBottom: '1px solid black' }}>{title}</div>
+                {data.map((item) => {
+                    console.log(item);
                     return (
                         <div
                             style={{
                                 border: '1px solid red',
                                 margin: '6px',
                                 padding: '6px',
-                                fontSize: '20px',
-                                borderCollapse: 'collapse',
                             }}>
-                            {item}
+                            <div style={{ fontSize: '16px' }}>
+                                <span
+                                    style={{
+                                        backgroundColor: item.badgeColor,
+                                        color: 'white',
+                                    }}>
+                                    공지
+                                </span>
+                                {item.title}
+                            </div>
+                            <div style={{ fontSize: '12px' }}>
+                                {item.description}
+                            </div>
+                            <div>
+                                <span>{item.name}</span>
+                                <span>{item.date}</span>
+                                <span>comment:{item.comment}</span>
+                                <span>view{item.view}</span>
+                                <span>share{item.share}</span>
+                                <span>like{item.like}</span>
+                            </div>
                         </div>
                     );
                 })}
