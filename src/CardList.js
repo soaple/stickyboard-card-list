@@ -16,142 +16,154 @@ const Wrapper = styled.div`
     overflow: scroll;
 `;
 
+const Title = styled.div`
+    color: #666;
+    border-bottom: 3px double #aaa;
+    font-family: Noto Sans KR;
+    font-weight: 900;
+`;
+
+const CardHeader = styled.div`
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+`;
+
+const Card = styled.div`
+    border-bottom: 1px solid silver;
+    margin: 8px 6px 8px 6px;
+    padding: 6px;
+    border-left: 6px solid silver;
+`;
+
+const CardBadge = styled.div`
+    background-color: ${(props) => props.badgeColor};
+    color: white;
+    border-radius: 5px;
+    font-size: 10.5px;
+    font-weight: bold;
+    padding: 3px 5px 3px 5px;
+    margin-right: 6px;
+`;
+
+const CardTitle = styled.div`
+    font-size: 14px;
+    font-weight: bold;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+`;
+
+const CardDescription = styled.div`
+    font-size: 12px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+`;
+
+const CardFooter = styled.div`
+    display: flex;
+`;
+
+const CardAuthor = styled.div`
+    font-size: 12px;
+    font-weight: bold;
+    margin-right: 6px;
+`;
+
+const CardDate = styled.div`
+    font-size: 12px;
+    font-weight: bold;
+    color: grey;
+    margin-right: 8px;
+`;
+
+const CardInfo = styled.div`
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    margin-right: 4px;
+`;
+
 class CardList extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {};
+        this.state = {
+            offset: this.props.default,
+        };
     }
 
-    /**
-     *    {
-        title: '호호',
-        description: '아무 설명이나 넣어볼게요',
-        name: '김태은',
-        date: '2020-09-13',
-        comment: 5,
-        like: 8,
-        view: 10,
-        share: 3,
-        badgeColor: 'purple',
-    },
-     */
+    componentDidMount() {
+        const cardListComp = document.getElementById('card-list-component');
+        cardListComp.onscroll = (e) => {
+            if (
+                e.target.scrollTop + e.target.offsetHeight + 20 >
+                e.target.scrollHeight
+            ) {
+                this.setState({
+                    offset: this.state.offset + this.props.offset,
+                });
+            }
+        };
+    }
 
     render() {
         const { data, title } = this.props;
-        console.log(data);
+        const splittedData = data.slice(0, this.state.offset);
         return (
-            <Wrapper>
-                <div
-                    style={{
-                        borderBottom: '3px double black',
-                        fontFamily: 'Noto Sans KR',
-                        fontWeight: '900',
-                    }}>
-                    {title}
-                </div>
-                {data.map((item) => {
-                    console.log(item);
+            <Wrapper id="card-list-component">
+                <Title>{title || `undefined`}</Title>
+                {splittedData.map((item, i) => {
                     return (
-                        <div
-                            style={{
-                                borderBottom: '1px solid grey',
-                                margin: '6px',
-                                padding: '6px',
-                                backgroundColor: '#f7f7f7',
-                            }}>
-                            <div
-                                style={{
-                                    fontSize: '16px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                }}>
-                                <div
-                                    style={{
-                                        backgroundColor: item.badgeColor,
-                                        color: 'white',
-                                        borderRadius: '5px',
-                                        fontSize: '10px',
-                                        fontWeight: 'bold',
-                                        padding: '2px',
-                                    }}>
-                                    공지
-                                </div>
-                                &nbsp;
-                                <div
-                                    style={{
-                                        fontSize: '14px',
-                                        fontWeight: 'bold',
-                                    }}>
-                                    {item.title}
-                                </div>
-                            </div>
-                            <div
-                                style={{
-                                    fontSize: '12px',
-                                    marginTop: '5px',
-                                    marginBottom: '10px',
-                                }}>
+                        <Card key={i}>
+                            <CardHeader>
+                                {item.badgeText && (
+                                    <CardBadge
+                                        badgeColor={item.badgeColor || 'grey'}>
+                                        {item.badgeText}
+                                    </CardBadge>
+                                )}
+                                <CardTitle>{item.title}</CardTitle>
+                            </CardHeader>
+                            <CardDescription>
                                 {item.description}
-                            </div>
-                            <div style={{ display: 'flex' }}>
-                                <div
-                                    style={{
-                                        fontSize: '12px',
-                                        fontWeight: 'bold',
-                                    }}>
-                                    {item.name}&nbsp;&nbsp;
-                                </div>
-                                <div
-                                    style={{
-                                        fontSize: '12px',
-                                        fontWeight: 'bold',
-                                        color: 'grey',
-                                    }}>
-                                    {item.date}&nbsp;&nbsp;
-                                </div>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        fontSize: '12px',
-                                    }}>
-                                    <AiOutlineComment />
-                                    &nbsp;
-                                    <div>{item.comment}</div>&nbsp;
-                                </div>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        fontSize: '12px',
-                                    }}>
-                                    <AiOutlineEye />
-                                    &nbsp;
-                                    <div>{item.view}</div>&nbsp;
-                                </div>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        fontSize: '12px',
-                                    }}>
-                                    <AiOutlineShareAlt />
-                                    &nbsp;
-                                    <div>{item.view}</div>&nbsp;
-                                </div>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        fontSize: '12px',
-                                    }}>
-                                    <AiOutlineHeart />
-                                    &nbsp;
-                                    <div>{item.view}</div>&nbsp;
-                                </div>
-                            </div>
-                        </div>
+                            </CardDescription>
+                            <CardFooter>
+                                <CardAuthor>{item.author}</CardAuthor>
+                                <CardDate>{item.date}</CardDate>
+                                {item.comment && (
+                                    <CardInfo>
+                                        <AiOutlineComment />
+                                        &nbsp;
+                                        <div>{item.comment}</div>
+                                    </CardInfo>
+                                )}
+                                {item.view && (
+                                    <CardInfo>
+                                        <AiOutlineEye />
+                                        &nbsp;
+                                        <div>{item.view}</div>
+                                    </CardInfo>
+                                )}
+                                {item.share && (
+                                    <CardInfo>
+                                        <AiOutlineShareAlt />
+                                        &nbsp;
+                                        <div>{item.share}</div>
+                                    </CardInfo>
+                                )}
+                                {item.heart && (
+                                    <CardInfo>
+                                        <AiOutlineHeart />
+                                        &nbsp;
+                                        <div>{item.heart}</div>
+                                    </CardInfo>
+                                )}
+                            </CardFooter>
+                        </Card>
                     );
                 })}
             </Wrapper>
@@ -159,6 +171,25 @@ class CardList extends React.Component {
     }
 }
 
-CardList.propTypes = {};
+CardList.propTypes = {
+    data: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.number.isRequired,
+            title: PropTypes.string.isRequired,
+            description: PropTypes.string.isRequired,
+            author: PropTypes.string.isRequired,
+            date: PropTypes.string.isRequired,
+            comment: PropTypes.number,
+            heart: PropTypes.number,
+            view: PropTypes.number,
+            share: PropTypes.number,
+            badgeText: PropTypes.string,
+            badgeColor: PropTypes.string,
+        })
+    ),
+    title: PropTypes.string.isRequired,
+    default: PropTypes.number.isRequired,
+    offset: PropTypes.number.isRequired,
+};
 
 export default CardList;
