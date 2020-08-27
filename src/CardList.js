@@ -174,7 +174,6 @@ class CardList extends React.Component {
 CardList.propTypes = {
     data: PropTypes.arrayOf(
         PropTypes.shape({
-            id: PropTypes.number.isRequired,
             title: PropTypes.string.isRequired,
             description: PropTypes.string.isRequired,
             author: PropTypes.string.isRequired,
