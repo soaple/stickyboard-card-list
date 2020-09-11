@@ -92,13 +92,13 @@ class CardList extends React.Component {
         super(props);
 
         this.state = {
-            offset: this.props.default,
+            offset: props.defaultOffset,
         };
     }
 
     componentDidMount() {
-        const cardListComp = document.getElementById('card-list-component');
-        cardListComp.onscroll = (e) => {
+        const cardListElem = document.getElementById('card-list');
+        cardListElem.onscroll = (e) => {
             if (
                 e.target.scrollTop + e.target.offsetHeight + 20 >
                 e.target.scrollHeight
@@ -111,14 +111,17 @@ class CardList extends React.Component {
     }
 
     render() {
+        const { offset } = this.state;
         const { data, title } = this.props;
-        const splittedData = data.slice(0, this.state.offset);
+
+        const splittedData = data.slice(0, offset);
+
         return (
-            <Wrapper id="card-list-component">
+            <Wrapper id="card-list">
                 <Title>{title || `undefined`}</Title>
-                {splittedData.map((item, i) => {
+                {splittedData.map((item, index) => {
                     return (
-                        <Card key={i}>
+                        <Card key={index}>
                             <CardHeader>
                                 {item.badgeText && (
                                     <CardBadge
@@ -128,9 +131,11 @@ class CardList extends React.Component {
                                 )}
                                 <CardTitle>{item.title}</CardTitle>
                             </CardHeader>
+
                             <CardDescription>
                                 {item.description}
                             </CardDescription>
+
                             <CardFooter>
                                 <CardAuthor>{item.author}</CardAuthor>
                                 <CardDate>{item.date}</CardDate>
@@ -187,7 +192,7 @@ CardList.propTypes = {
         })
     ),
     title: PropTypes.string.isRequired,
-    default: PropTypes.number.isRequired,
+    defaultOffset: PropTypes.number.isRequired,
     offset: PropTypes.number.isRequired,
 };
 
